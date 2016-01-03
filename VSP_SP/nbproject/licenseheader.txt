@@ -1,0 +1,7 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix}VSP - Semestrální práce.
+<#if licenseLast??>
+${licenseLast}
+</#if>
