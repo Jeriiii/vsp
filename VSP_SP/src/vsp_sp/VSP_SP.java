@@ -19,13 +19,13 @@ public class VSP_SP {
 	 */
 	public static void main(String[] args) {
 		JSimSimulation simulation = null;
-		JSimHead queue = null;
+		Queue queue = null;
 		MyProcess process = null;
 
 		try {
 			simulation = new JSimSimulation("First simulation");
 
-			queue = new JSimHead("Little queue", simulation);
+			queue = new Queue("Little queue", simulation);
 			/* vkládání prvku do fronty */
 			JSimLink element;
 			int i;
@@ -42,37 +42,43 @@ public class VSP_SP {
 			before.precede(queue.last());
 
 			/* projde a vytiskne prvky ve frontě - po vytištění prvku je prvek odstraněn */
-			String dataType;
-			Integer intObject;
-			Float floatObject;
-
-			while (!queue.empty()) {
-				element = queue.first();
-				dataType = element.getDataType();
-				System.out.println("The first element is of type: "
-						+ dataType);
-				switch (dataType.charAt(dataType.lastIndexOf('.') + 1)) {
-					case 'I': // Integer
-						intObject = (Integer) element.getData();
-						System.out.println("Data: " + intObject.toString());
-						break;
-					case 'F': // Float
-						floatObject = (Float) element.getData();
-						System.out.println("Data: " + floatObject.toString());
-						break;
-					default:
-						System.out.println("There is an unknown object at"
-								+ " the head of the queue.");
-				} // switch
-				element.out();
-				System.out.println("Number of items in the queue: "
-						+ queue.cardinal());
-			}
+//			String dataType;
+//			Integer intObject;
+//			Float floatObject;
+//
+//			while (!queue.empty()) {
+//				element = queue.first();
+//				dataType = element.getDataType();
+//				System.out.println("The first element is of type: "
+//						+ dataType);
+//				switch (dataType.charAt(dataType.lastIndexOf('.') + 1)) {
+//					case 'I': // Integer
+//						intObject = (Integer) element.getData();
+//						System.out.println("Data: " + intObject.toString());
+//						break;
+//					case 'F': // Float
+//						floatObject = (Float) element.getData();
+//						System.out.println("Data: " + floatObject.toString());
+//						break;
+//					default:
+//						System.out.println("There is an unknown object at"
+//								+ " the head of the queue.");
+//				} // switch
+//				element.out();
+//				System.out.println("Number of items in the queue: "
+//						+ queue.cardinal());
+//			}
 
 			/* process */
 			process = new MyProcess("My process No 1",
 					simulation /*,... other parameters  ...*/);
 			process.activate(1.2345);
+
+			/* generátor */
+			Generator gen = new Generator(1, "Generátor s labda = 1", simulation);
+			gen.activate(0);
+
+			while (simulation.step() == true);
 		} catch (JSimException e) {
 			e.printStackTrace();
 			e.printComment(System.err);
