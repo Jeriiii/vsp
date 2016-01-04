@@ -49,6 +49,12 @@ public class Pipeline {
 		this.mainTargetQueue = mainTargetQueue;
 	}
 
+	/**
+	 * Vloží prvek do fronty v závislosti na nastavené pravděpodobnosti.
+	 *
+	 * @param item Prvek co se má vložit.
+	 * @throws JSimSecurityException
+	 */
 	public void insert(Object item) throws JSimSecurityException {
 		JSimLink qitem = new JSimLink(item);
 
