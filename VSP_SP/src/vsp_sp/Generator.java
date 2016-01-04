@@ -46,6 +46,9 @@ public class Generator extends BaseProcess {
 		this.queue = queue;
 	}
 
+	/**
+	 * Postupně generuje prvky
+	 */
 	@Override
 	protected void life() {
 		for (int i = 0; i < countGenItems; i++) {
