@@ -18,8 +18,15 @@ import java.util.logging.Logger;
  */
 public abstract class BaseProcess extends JSimProcess {
 
+	/**
+	 * Název procesu
+	 */
+	public String name;
+
 	public BaseProcess(String name, JSimSimulation parent) throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException {
 		super(name, parent);
+
+		this.name = name;
 	}
 
 	/**
