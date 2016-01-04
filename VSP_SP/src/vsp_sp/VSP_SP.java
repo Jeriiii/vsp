@@ -17,31 +17,56 @@ public class VSP_SP {
 	 * @param args the command line arguments
 	 */
 	public static void main(String[] args) {
-		JSimSimulation simulation = null;
-		Queue queue1 = null;
+		JSimSimulation sim = null;
+		Queue queue1 = null, queue2 = null, queue3 = null, queue4 = null;
 		MyProcess process = null;
 		Generator gen1 = null, gen2 = null;
 
 		try {
-			simulation = new JSimSimulation("First simulation");
+			sim = new JSimSimulation("First simulation");
 
-			queue1 = new Queue("Little queue", simulation);
-			/* vkládání prvku do fronty */
-			JSimLink element;
-			int i;
-			for (i = 0; i < 5; i++) {
-				element = new JSimLink(new Integer(i));
-				element.into(queue1);
-			}
+			queue1 = new Queue("Fronta 1", sim);
+			queue2 = new Queue("Fronta 2", sim);
+			queue3 = new Queue("Fronta 3", sim);
+			queue4 = new Queue("Fronta 4", sim);
 
-			/* vkládání před a za prvek */
-			JSimLink before, after;
-			after = new JSimLink(new Float(0.5));
-			before = new JSimLink(new Float(3.5));
-			after.follow(queue1.first());
-			before.precede(queue1.last());
+			/* generátor */
+			gen1 = new Generator(1, 2000, queue1, "Generátor s labda = 1", sim);
+			gen1.activate(0);
 
-			/* projde a vytiskne prvky ve frontě - po vytištění prvku je prvek odstraněn */
+			gen2 = new Generator(3, 2000, queue1, "Generátor s labda = 3", sim);
+			gen2.activate(0);
+
+			while (sim.step() == true);
+		} catch (JSimException e) {
+			e.printStackTrace();
+			e.printComment(System.err);
+		} finally {
+			sim.shutdown();
+		}
+	}
+
+	/* process */
+	/*process = new MyProcess("My process No 1",
+	 /*sim /*,... other parameters  ...*//*);
+	 process.activate(1.2345);
+
+	 /* vkládání prvku do fronty */
+	/*JSimLink element;
+	 int i;
+	 for (i = 0; i < 5; i++) {
+	 element = new JSimLink(new Integer(i));
+	 element.into(queue1);
+	 }
+
+	 /* vkládání před a za prvek */
+	/*JSimLink before, after;
+	 after = new JSimLink(new Float(0.5));
+	 before = new JSimLink(new Float(3.5));
+	 after.follow(queue1.first());
+	 before.precede(queue1.last());
+
+	 /* projde a vytiskne prvky ve frontě - po vytištění prvku je prvek odstraněn */
 //			String dataType;
 //			Integer intObject;
 //			Float floatObject;
@@ -68,25 +93,4 @@ public class VSP_SP {
 //				System.out.println("Number of items in the queue: "
 //						+ queue.cardinal());
 //			}
-
-			/* process */
-			process = new MyProcess("My process No 1",
-					simulation /*,... other parameters  ...*/);
-			process.activate(1.2345);
-
-			/* generátor */
-			gen1 = new Generator(1, 2000, queue1, "Generátor s labda = 1", simulation);
-			gen1.activate(0);
-
-			gen2 = new Generator(3, 2000, queue1, "Generátor s labda = 3", simulation);
-			gen2.activate(0);
-
-			while (simulation.step() == true);
-		} catch (JSimException e) {
-			e.printStackTrace();
-			e.printComment(System.err);
-		} finally {
-			simulation.shutdown();
-		}
-	}
 }
