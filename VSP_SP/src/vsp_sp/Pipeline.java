@@ -76,9 +76,15 @@ public class Pipeline {
 	private void insertToQueue(JSimLink item, IQueue queue) throws JSimSecurityException {
 		if (queue instanceof Output) { //pokud jde o výstupní kanál z celé sítě front, prvek se již nikam neukládá
 			return;
+		} else {
+			try {
+				item.out();
+			} catch (JSimSecurityException e) {
+				//reakce na vyjímku, kdy prvek není v žádné frontě
+				//když není v žádné frontě, tak se prostě nic nestane -> opravdu tu nemá být žádný kód
+			}
+			item.into((Queue) queue);
 		}
-
-		item.into((Queue) mainTargetQueue);
 	}
 
 }
