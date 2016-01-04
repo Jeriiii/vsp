@@ -49,15 +49,13 @@ public class Generator extends BaseProcess {
 	@Override
 	protected void life() {
 		for (int i = 0; i < countGenItems; i++) {
-			message("life ");
+			double random = JSimSystem.negExp(lambda);
+
+			wait(random);
 
 			JSimLink item = new JSimLink();
 			into(item, queue);
 
-			double random = JSimSystem.negExp(lambda);
-			message("Random je " + random);
-
-			wait(random);
 		}
 	}
 
