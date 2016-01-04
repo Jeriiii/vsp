@@ -55,14 +55,13 @@ public class Pipeline {
 	 * @param item Prvek co se má vložit.
 	 * @throws JSimSecurityException
 	 */
-	public void insert(Object item) throws JSimSecurityException {
-		JSimLink qitem = new JSimLink(item);
-
+	public void insert(JSimLink item) throws JSimSecurityException {
 		double random = Math.random();
+
 		if (random <= probability) {
-			qitem.into(mainTargetQueue);
+			item.into(mainTargetQueue);
 		} else {
-			qitem.into(secondaryTargetQueue);
+			item.into(secondaryTargetQueue);
 		}
 	}
 
