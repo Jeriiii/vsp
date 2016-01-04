@@ -19,13 +19,13 @@ public class Pipeline {
 	 * Hlavní fronta, představuje frontu do které se prvek přesune s větší
 	 * pravděpodobností
 	 */
-	private Queue mainTargetQueue;
+	private IQueue mainTargetQueue;
 
 	/**
 	 * Hlavní fronta, představuje frontu do které se prvek přesune s menší
 	 * pravděpodobností
 	 */
-	private Queue secondaryTargetQueue = null;
+	private IQueue secondaryTargetQueue = null;
 
 	/**
 	 * Pravděpodobnost, že se prvek vloží do fronty mainTargetQueue
@@ -36,7 +36,7 @@ public class Pipeline {
 	 * Pokud jsou cílové fronty dvě a prvek se přesouvá do jedné z nich na
 	 * základě určité pravděpodobnosti.
 	 */
-	public Pipeline(Queue mainTargetQueue, Queue secondaryTargetQueue, double probability) {
+	public Pipeline(IQueue mainTargetQueue, IQueue secondaryTargetQueue, double probability) {
 		this.mainTargetQueue = mainTargetQueue;
 		this.secondaryTargetQueue = secondaryTargetQueue;
 		this.probability = probability;
@@ -45,7 +45,7 @@ public class Pipeline {
 	/**
 	 * Cílová fronta je pouze jedna.
 	 */
-	public Pipeline(Queue mainTargetQueue) {
+	public Pipeline(IQueue mainTargetQueue) {
 		this.mainTargetQueue = mainTargetQueue;
 	}
 
@@ -59,10 +59,26 @@ public class Pipeline {
 		double random = Math.random();
 
 		if (random <= probability) {
-			item.into(mainTargetQueue);
+			insertToQueue(item, mainTargetQueue);
 		} else {
-			item.into(secondaryTargetQueue);
+			insertToQueue(item, secondaryTargetQueue);
 		}
+	}
+
+	/**
+	 * Vloží prvek do fronty. Pokud jde o výstupní kanál, prvek již nikam
+	 * nevkládá.
+	 *
+	 * @param item Prvek co se má vložit.
+	 * @param queue Fronta, do které má prvek vložit.
+	 * @throws JSimSecurityException
+	 */
+	private void insertToQueue(JSimLink item, IQueue queue) throws JSimSecurityException {
+		if (queue instanceof Output) { //pokud jde o výstupní kanál z celé sítě front, prvek se již nikam neukládá
+			return;
+		}
+
+		item.into((Queue) mainTargetQueue);
 	}
 
 }

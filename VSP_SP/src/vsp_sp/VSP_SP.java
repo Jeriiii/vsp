@@ -4,8 +4,12 @@
 package vsp_sp;
 
 import cz.zcu.fav.kiv.jsim.JSimException;
+import cz.zcu.fav.kiv.jsim.JSimInvalidParametersException;
 import cz.zcu.fav.kiv.jsim.JSimLink;
+import cz.zcu.fav.kiv.jsim.JSimSecurityException;
 import cz.zcu.fav.kiv.jsim.JSimSimulation;
+import cz.zcu.fav.kiv.jsim.JSimSimulationAlreadyTerminatedException;
+import cz.zcu.fav.kiv.jsim.JSimTooManyProcessesException;
 
 /**
  *
@@ -20,23 +24,24 @@ public class VSP_SP {
 		JSimSimulation sim = null;
 		Queue queue1 = null, queue2 = null, queue3 = null, queue4 = null;
 		MyProcess process = null;
-		Generator gen1 = null, gen2 = null;
+		Output output = null;
 
 		try {
+			/* vytvoření simulace */
 			sim = new JSimSimulation("First simulation");
 
+			/* vytvoření front */
 			queue1 = new Queue("Fronta 1", sim);
 			queue2 = new Queue("Fronta 2", sim);
 			queue3 = new Queue("Fronta 3", sim);
 			queue4 = new Queue("Fronta 4", sim);
 
-			/* generátor */
-			gen1 = new Generator(1, 2000, queue1, "Generátor s labda = 1", sim);
-			gen1.activate(0);
+			output = new Output();
 
-			gen2 = new Generator(3, 2000, queue1, "Generátor s labda = 3", sim);
-			gen2.activate(0);
+			createGenetarors(queue1, queue2, sim);
+			createSHO(queue1, queue2, queue3, queue4, output, sim);
 
+			/* spuštění simulace */
 			while (sim.step() == true);
 		} catch (JSimException e) {
 			e.printStackTrace();
@@ -44,6 +49,38 @@ public class VSP_SP {
 		} finally {
 			sim.shutdown();
 		}
+	}
+
+	/**
+	 * Vytvoření a spuštění generátorů.
+	 */
+	private static void createGenetarors(Queue queue1, Queue queue2, JSimSimulation sim) throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException, JSimSecurityException {
+		Generator gen1 = new Generator(1, 2000, queue1, "Generátor s labda = 1", sim);
+		gen1.activate(0);
+
+		Generator gen2 = new Generator(3, 2000, queue2, "Generátor s labda = 3", sim);
+		gen2.activate(0);
+	}
+
+	/**
+	 * Vytvoření a puštění SHO.
+	 */
+	private static void createSHO(Queue queue1, Queue queue2, Queue queue3, Queue queue4, Output output, JSimSimulation sim) throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException, JSimSecurityException {
+		Pipeline p1 = new Pipeline(queue3);
+		SHO sho1 = new SHO(2, queue1, p1, "SHO 1", sim);
+		sho1.activate(0);
+
+		Pipeline p2 = new Pipeline(queue3, queue2, 0.9);
+		SHO sho2 = new SHO(5, queue2, p2, "SHO 2", sim);
+		sho2.activate(0);
+
+		Pipeline p3 = new Pipeline(queue4, queue2, 0.95);
+		SHO sho3 = new SHO(5, queue3, p3, "SHO 3", sim);
+		sho3.activate(0);
+
+		Pipeline p4 = new Pipeline(output, queue1, 0.98);
+		SHO sho4 = new SHO(5, queue4, p4, "SHO 4", sim);
+		sho4.activate(0);
 	}
 
 	/* process */
