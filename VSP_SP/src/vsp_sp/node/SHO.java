@@ -43,6 +43,11 @@ public class SHO extends BaseProcess implements INode {
 	 */
 	private int counter = 0;
 
+	/**
+	 * Celkový součet všech Ts co prošli tímto SHO
+	 */
+	private double sumTs = 0.0;
+
 	public SHO(int mi, Queue queue, String name, JSimSimulation parent)
 			throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException {
 		super(name, parent);
@@ -60,10 +65,14 @@ public class SHO extends BaseProcess implements INode {
 		try {
 			while (true) {
 				if (queue.empty()) {
-					/* když je prázdná, tak se uspí */
-					passivate();
+
+					passivate(); /* když je prázdná, tak se uspí */
+
 				} else {
+
 					double random = JSimSystem.negExp(mi);
+					sumTs = sumTs + random;
+
 					waitTo(random);
 
 					JSimLink item = queue.first();
@@ -74,6 +83,7 @@ public class SHO extends BaseProcess implements INode {
 						counter++;
 						//System.out.println("SHO " + name + " zpracovalo prvek");
 					}
+
 				}
 			}
 		} catch (JSimSecurityException ex) {
@@ -105,8 +115,33 @@ public class SHO extends BaseProcess implements INode {
 		this.pipeline = p;
 	}
 
+	/**
+	 * Vrátí počet prvků které prošli tímto SHO
+	 */
 	public int getCounter() {
 		return counter;
+	}
+
+	/**
+	 * Vrátí průměrnou dobu, jakou musel prvek čekat ve frontě než přišel na
+	 * zpracování.
+	 */
+	public double getTw() {
+		return queue.getTw();
+	}
+
+	/**
+	 * Vrátí průměrnou dobu zpracování prvku.
+	 */
+	public double getTs() {
+		return sumTs / ((double) counter);
+	}
+
+	/**
+	 * Vrátí průměrnou dobu, kterou musel prvek strávit v tomto SHO
+	 */
+	public double getTq() {
+		return this.getTw() + this.getTs();
 	}
 
 }

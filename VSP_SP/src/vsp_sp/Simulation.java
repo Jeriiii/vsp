@@ -84,6 +84,10 @@ public class Simulation {
 		System.out.println("Počet položek zpracovaných SHO 4: " + sho4.getCounter());
 
 		System.out.println("-------------- Tq -------------- ");
+		System.out.println("SHO 1 Tqi je " + sho1.getTq());
+		System.out.println("SHO 2 Tqi je " + sho2.getTq());
+		System.out.println("SHO 3 Tqi je " + sho3.getTq());
+		System.out.println("SHO 4 Tqi je " + sho4.getTq());
 		System.out.println("Celkové Tq je " + output.getTq());
 	}
 
