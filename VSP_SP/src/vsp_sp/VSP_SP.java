@@ -38,11 +38,19 @@ public class VSP_SP {
 
 			output = new Output();
 
-			createGenetarors(queue1, queue2, sim);
+			//createGenetarors(queue1, queue2, sim);
+			Generator gen1 = new Generator(1, 2000, queue1, "Generátor s labda = 1", sim);
+			gen1.activateNow();
+
+			Generator gen2 = new Generator(3, 2000, queue2, "Generátor s labda = 3", sim);
+			gen2.activateNow();
+
 			createSHO(queue1, queue2, queue3, queue4, output, sim);
 
 			/* spuštění simulace */
-			while (sim.step() == true);
+			while ((sim.step() == true))// && (!gen1.isFinished()) && (!gen2.isFinished()))
+				;
+
 		} catch (JSimException e) {
 			e.printStackTrace();
 			e.printComment(System.err);
@@ -56,31 +64,35 @@ public class VSP_SP {
 	 */
 	private static void createGenetarors(Queue queue1, Queue queue2, JSimSimulation sim) throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException, JSimSecurityException {
 		Generator gen1 = new Generator(1, 2000, queue1, "Generátor s labda = 1", sim);
-		gen1.activate(0);
+		gen1.activateNow();
 
 		Generator gen2 = new Generator(3, 2000, queue2, "Generátor s labda = 3", sim);
-		gen2.activate(0);
+		gen2.activateNow();
 	}
 
 	/**
 	 * Vytvoření a puštění SHO.
 	 */
 	private static void createSHO(Queue queue1, Queue queue2, Queue queue3, Queue queue4, Output output, JSimSimulation sim) throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException, JSimSecurityException {
-		Pipeline p1 = new Pipeline(queue3);
-		SHO sho1 = new SHO(2, queue1, p1, "SHO 1", sim);
-		sho1.activate(0);
+		SHO sho1 = new SHO(2, queue1, "SHO 1", sim);
+		SHO sho2 = new SHO(5, queue2, "SHO 2", sim);
+		SHO sho3 = new SHO(5, queue3, "SHO 3", sim);
+		SHO sho4 = new SHO(5, queue4, "SHO 4", sim);
 
-		Pipeline p2 = new Pipeline(queue3, queue2, 0.9);
-		SHO sho2 = new SHO(5, queue2, p2, "SHO 2", sim);
-		sho2.activate(0);
+		Pipeline p1 = new Pipeline(sho3);
+		Pipeline p2 = new Pipeline(sho3, sho2, 0.9);
+		Pipeline p3 = new Pipeline(sho4, sho2, 0.95);
+		Pipeline p4 = new Pipeline(output, sho1, 0.98);
 
-		Pipeline p3 = new Pipeline(queue4, queue2, 0.95);
-		SHO sho3 = new SHO(5, queue3, p3, "SHO 3", sim);
-		sho3.activate(0);
+		sho1.setPipeline(p1);
+		sho2.setPipeline(p2);
+		sho3.setPipeline(p3);
+		sho4.setPipeline(p4);
 
-		Pipeline p4 = new Pipeline(output, queue1, 0.98);
-		SHO sho4 = new SHO(5, queue4, p4, "SHO 4", sim);
-		sho4.activate(0);
+//		sho1.activateNow();
+//		sho2.activateNow();
+//		sho3.activateNow();
+//		sho4.activateNow();
 	}
 
 	/* process */

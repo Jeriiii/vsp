@@ -13,7 +13,7 @@ import cz.zcu.fav.kiv.jsim.JSimTooManyHeadsException;
  *
  * @author Petr Kukrál <p.kukral@kukral.eu>
  */
-public class Queue extends JSimHead implements IQueue {
+public class Queue extends JSimHead {
 
 	public Queue(String name, JSimSimulation parent) throws JSimInvalidParametersException, JSimTooManyHeadsException {
 		super(name, parent);

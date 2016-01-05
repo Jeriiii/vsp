@@ -23,6 +23,11 @@ public abstract class BaseProcess extends JSimProcess {
 	 */
 	public String name;
 
+	/**
+	 * TRUE = proces je zadržen metodou hold, jinak FALSE
+	 */
+	private boolean hold = false;
+
 	public BaseProcess(String name, JSimSimulation parent) throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException {
 		super(name, parent);
 
@@ -34,14 +39,22 @@ public abstract class BaseProcess extends JSimProcess {
 	 *
 	 * @param waitTime Čas, po který se má proces pozastavit.
 	 */
-	protected void wait(double waitTime) {
+	protected void waitTo(double waitTime) {
+		hold = true;
+
 		try {
 			this.hold(waitTime);
 		} catch (JSimSecurityException ex) {
 			Logger.getLogger(Generator.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (JSimInvalidParametersException ex) {
 			Logger.getLogger(Generator.class.getName()).log(Level.SEVERE, null, ex);
+		} finally {
+			hold = false;
 		}
+	}
+
+	public boolean isHold() {
+		return hold;
 	}
 
 }

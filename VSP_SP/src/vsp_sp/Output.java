@@ -7,6 +7,6 @@ package vsp_sp;
  *
  * @author Petr Kukrál <p.kukral@kukral.eu>
  */
-public class Output implements IQueue {
+public class Output implements INode {
 
 }

@@ -5,6 +5,7 @@ package vsp_sp;
 
 import cz.zcu.fav.kiv.jsim.JSimLink;
 import cz.zcu.fav.kiv.jsim.JSimSecurityException;
+import cz.zcu.fav.kiv.jsim.JSimSystem;
 
 /**
  * Spojovací prvek mezi dvěma frontami. Dokáže se rozhodovat do jaké fronty se
@@ -19,16 +20,16 @@ public class Pipeline {
 	 * Hlavní fronta, představuje frontu do které se prvek přesune s větší
 	 * pravděpodobností
 	 */
-	private IQueue mainTargetQueue;
+	private INode mainTargetSHO;
 
 	/**
 	 * Hlavní fronta, představuje frontu do které se prvek přesune s menší
 	 * pravděpodobností
 	 */
-	private IQueue secondaryTargetQueue = null;
+	private INode secondaryTargetSHO = null;
 
 	/**
-	 * Pravděpodobnost, že se prvek vloží do fronty mainTargetQueue
+	 * Pravděpodobnost, že se prvek vloží do fronty mainTargetSHO
 	 */
 	private double probability = 1;
 
@@ -36,17 +37,17 @@ public class Pipeline {
 	 * Pokud jsou cílové fronty dvě a prvek se přesouvá do jedné z nich na
 	 * základě určité pravděpodobnosti.
 	 */
-	public Pipeline(IQueue mainTargetQueue, IQueue secondaryTargetQueue, double probability) {
-		this.mainTargetQueue = mainTargetQueue;
-		this.secondaryTargetQueue = secondaryTargetQueue;
+	public Pipeline(INode mainTargetSHO, INode secondaryTargetSHO, double probability) {
+		this.mainTargetSHO = mainTargetSHO;
+		this.secondaryTargetSHO = secondaryTargetSHO;
 		this.probability = probability;
 	}
 
 	/**
 	 * Cílová fronta je pouze jedna.
 	 */
-	public Pipeline(IQueue mainTargetQueue) {
-		this.mainTargetQueue = mainTargetQueue;
+	public Pipeline(INode mainTargetSHO) {
+		this.mainTargetSHO = mainTargetSHO;
 	}
 
 	/**
@@ -56,12 +57,12 @@ public class Pipeline {
 	 * @throws JSimSecurityException
 	 */
 	public void insert(JSimLink item) throws JSimSecurityException {
-		double random = Math.random();
+		double random = JSimSystem.uniform(0.0, 1.0);
 
 		if (random <= probability) {
-			insertToQueue(item, mainTargetQueue);
+			insertToQueue(item, mainTargetSHO);
 		} else {
-			insertToQueue(item, secondaryTargetQueue);
+			insertToQueue(item, secondaryTargetSHO);
 		}
 	}
 
@@ -73,17 +74,13 @@ public class Pipeline {
 	 * @param queue Fronta, do které má prvek vložit.
 	 * @throws JSimSecurityException
 	 */
-	private void insertToQueue(JSimLink item, IQueue queue) throws JSimSecurityException {
-		if (queue instanceof Output) { //pokud jde o výstupní kanál z celé sítě front, prvek se již nikam neukládá
+	private void insertToQueue(JSimLink item, INode node) throws JSimSecurityException {
+		if (node instanceof Output) { //pokud jde o výstupní kanál z celé sítě front, prvek se již nikam neukládá
 			return;
 		} else {
-			try {
-				item.out();
-			} catch (JSimSecurityException e) {
-				//reakce na vyjímku, kdy prvek není v žádné frontě
-				//když není v žádné frontě, tak se prostě nic nestane -> opravdu tu nemá být žádný kód
-			}
-			item.into((Queue) queue);
+			SHO sho = (SHO) node;
+			sho.insert(item);
+			sho.activateNow();
 		}
 	}
 

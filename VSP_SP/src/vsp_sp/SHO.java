@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  *
  * @author Petr Kukrál <p.kukral@kukral.eu>
  */
-public class SHO extends BaseProcess {
+public class SHO extends BaseProcess implements INode {
 
 	/**
 	 * Fronta tohoto SHO.
@@ -35,7 +35,7 @@ public class SHO extends BaseProcess {
 	 */
 	private int mi;
 
-	public SHO(int mi, Queue queue, Pipeline pipeline, String name, JSimSimulation parent)
+	public SHO(int mi, Queue queue, String name, JSimSimulation parent)
 			throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException {
 		super(name, parent);
 
@@ -49,16 +49,24 @@ public class SHO extends BaseProcess {
 	 * Postupně zpracovává prvky z fronty.
 	 */
 	protected void life() {
-		for (int i = 0; i < 100000; i++) {
-			double random = JSimSystem.negExp(mi);
-			wait(random);
+		while (true) {
+			if (queue.empty()) {
+				try { //když je prázdná, tak se uspí
+					passivate();
+				} catch (JSimSecurityException ex) {
+					Logger.getLogger(SHO.class.getName()).log(Level.SEVERE, null, ex);
+				}
+			} else {
+				double random = JSimSystem.negExp(mi);
+				waitTo(random);
 
-			JSimLink item = queue.last();
+				JSimLink item = queue.first();
 
-			if (item != null) //pokud item je null, je fronta prázdná
-			{
-				insertPipeline(item);
-				System.out.println("SHO " + name + " zpracovalo prvek");
+				if (item != null) //pokud item je null, je fronta prázdná
+				{
+					insertPipeline(item);
+					System.out.println("SHO " + name + " zpracovalo prvek");
+				}
 			}
 		}
 	}
@@ -74,5 +82,29 @@ public class SHO extends BaseProcess {
 		} catch (JSimSecurityException ex) {
 			Logger.getLogger(SHO.class.getName()).log(Level.SEVERE, null, ex);
 		}
+	}
+
+	/**
+	 * Vloží prvek do fronty tohoto SHO.
+	 *
+	 * @param item Prvek co se má vložit
+	 * @throws JSimSecurityException
+	 */
+	public void insert(JSimLink item) throws JSimSecurityException {
+		try {
+			item.out();
+		} catch (JSimSecurityException e) {
+			//reakce na vyjímku, kdy prvek není v žádné frontě
+			//když není v žádné frontě, tak se prostě nic nestane -> opravdu tu nemá být žádný kód
+		}
+		item.into(queue);
+
+		if (this.isIdle() && (!this.isHold())) {
+			activateNow();
+		}
+	}
+
+	public void setPipeline(Pipeline p) {
+		this.pipeline = p;
 	}
 }

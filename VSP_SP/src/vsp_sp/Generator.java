@@ -37,6 +37,11 @@ public class Generator extends BaseProcess {
 	 */
 	private int countGenItems;
 
+	/**
+	 * TRUE = generátor vygeneroval všechny potřebné prvky, jinak FALSE
+	 */
+	public boolean finished = false;
+
 	public Generator(int lambda, int countGenItems, Queue queue, String name, JSimSimulation parent)
 			throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException {
 		super(name, parent);
@@ -54,12 +59,14 @@ public class Generator extends BaseProcess {
 		for (int i = 0; i < countGenItems; i++) {
 			double random = JSimSystem.negExp(lambda);
 
-			wait(random);
+			waitTo(random);
 
 			JSimLink item = new JSimLink();
 			into(item, queue);
 
 		}
+
+		finished = true;
 	}
 
 	/**
@@ -74,6 +81,15 @@ public class Generator extends BaseProcess {
 		} catch (JSimSecurityException ex) {
 			Logger.getLogger(Generator.class.getName()).log(Level.SEVERE, null, ex);
 		}
+	}
+
+	/**
+	 * Řekne, zda už vygeneroval všechny svoje prvky.
+	 *
+	 * @return
+	 */
+	public boolean isFinished() {
+		return finished;
 	}
 
 }
