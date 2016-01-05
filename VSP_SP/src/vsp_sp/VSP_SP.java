@@ -10,6 +10,8 @@ import cz.zcu.fav.kiv.jsim.JSimSecurityException;
 import cz.zcu.fav.kiv.jsim.JSimSimulation;
 import cz.zcu.fav.kiv.jsim.JSimSimulationAlreadyTerminatedException;
 import cz.zcu.fav.kiv.jsim.JSimTooManyProcessesException;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
 
 /**
  *
@@ -25,6 +27,8 @@ public class VSP_SP {
 		Queue queue1 = null, queue2 = null, queue3 = null, queue4 = null;
 		MyProcess process = null;
 		Output output = null;
+
+		LogManager.getLogManager().getLogger("").setLevel(Level.SEVERE);
 
 		try {
 			/* vytvoření simulace */
