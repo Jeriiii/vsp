@@ -1,7 +1,7 @@
 /*
  * VSP - Semestrální práce.
  */
-package vsp_sp;
+package vsp_sp.node;
 
 /**
  *

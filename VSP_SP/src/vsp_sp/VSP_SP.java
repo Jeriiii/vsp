@@ -3,6 +3,10 @@
  */
 package vsp_sp;
 
+import vsp_sp.node.Output;
+import vsp_sp.node.Queue;
+import vsp_sp.node.SHO;
+import vsp_sp.generator.Generator;
 import cz.zcu.fav.kiv.jsim.JSimException;
 import cz.zcu.fav.kiv.jsim.JSimInvalidParametersException;
 import cz.zcu.fav.kiv.jsim.JSimLink;

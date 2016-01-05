@@ -3,6 +3,7 @@
  */
 package vsp_sp;
 
+import vsp_sp.generator.Generator;
 import cz.zcu.fav.kiv.jsim.JSimInvalidParametersException;
 import cz.zcu.fav.kiv.jsim.JSimProcess;
 import cz.zcu.fav.kiv.jsim.JSimSecurityException;

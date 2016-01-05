@@ -1,8 +1,9 @@
 /*
  * VSP - Semestrální práce.
  */
-package vsp_sp;
+package vsp_sp.node;
 
+import vsp_sp.node.INode;
 import cz.zcu.fav.kiv.jsim.JSimInvalidParametersException;
 import cz.zcu.fav.kiv.jsim.JSimLink;
 import cz.zcu.fav.kiv.jsim.JSimSecurityException;
@@ -12,6 +13,8 @@ import cz.zcu.fav.kiv.jsim.JSimSystem;
 import cz.zcu.fav.kiv.jsim.JSimTooManyProcessesException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import vsp_sp.BaseProcess;
+import vsp_sp.Pipeline;
 
 /**
  * Elementární SHO.

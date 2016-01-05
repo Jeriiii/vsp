@@ -1,7 +1,9 @@
 /*
  * VSP - Semestrální práce.
  */
-package vsp_sp;
+package vsp_sp.node;
+
+import vsp_sp.node.INode;
 
 /**
  *

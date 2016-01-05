@@ -1,7 +1,7 @@
 /*
  * VSP - Semestrální práce.
  */
-package vsp_sp;
+package vsp_sp.generator;
 
 import cz.zcu.fav.kiv.jsim.JSimHead;
 import cz.zcu.fav.kiv.jsim.JSimInvalidParametersException;
@@ -14,6 +14,8 @@ import cz.zcu.fav.kiv.jsim.JSimSystem;
 import cz.zcu.fav.kiv.jsim.JSimTooManyProcessesException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import vsp_sp.BaseProcess;
+import vsp_sp.Pipeline;
 
 /**
  * Třída zajišťující vstupní proud požadavků do sítě front.

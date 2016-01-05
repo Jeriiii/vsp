@@ -3,6 +3,9 @@
  */
 package vsp_sp;
 
+import vsp_sp.node.Output;
+import vsp_sp.node.SHO;
+import vsp_sp.node.INode;
 import cz.zcu.fav.kiv.jsim.JSimLink;
 import cz.zcu.fav.kiv.jsim.JSimSecurityException;
 import cz.zcu.fav.kiv.jsim.JSimSystem;
