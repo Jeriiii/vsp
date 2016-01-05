@@ -9,4 +9,13 @@ package vsp_sp;
  */
 public class Output implements INode {
 
+	/**
+	 * Počet položek které prošli sítí.
+	 */
+	public int counter = 0;
+
+	public void out(Object item) {
+		counter++;
+	}
+
 }
