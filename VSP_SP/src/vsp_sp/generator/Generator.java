@@ -15,6 +15,7 @@ import cz.zcu.fav.kiv.jsim.JSimTooManyProcessesException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import vsp_sp.BaseProcess;
+import vsp_sp.Item;
 import vsp_sp.Pipeline;
 
 /**
@@ -63,8 +64,9 @@ public class Generator extends BaseProcess {
 
 			waitTo(random);
 
-			JSimLink item = new JSimLink();
-			into(item);
+			Item item = new Item(myParent.getCurrentTime());
+			JSimLink litem = new JSimLink(item);
+			into(litem);
 
 		}
 

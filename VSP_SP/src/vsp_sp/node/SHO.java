@@ -38,6 +38,11 @@ public class SHO extends BaseProcess implements INode {
 	 */
 	private int mi;
 
+	/**
+	 * Počet položek co prošel daným SHO
+	 */
+	private int counter = 0;
+
 	public SHO(int mi, Queue queue, String name, JSimSimulation parent)
 			throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException {
 		super(name, parent);
@@ -52,36 +57,25 @@ public class SHO extends BaseProcess implements INode {
 	 * Postupně zpracovává prvky z fronty.
 	 */
 	protected void life() {
-		while (true) {
-			if (queue.empty()) {
-				try { //když je prázdná, tak se uspí
+		try {
+			while (true) {
+				if (queue.empty()) {
+					/* když je prázdná, tak se uspí */
 					passivate();
-				} catch (JSimSecurityException ex) {
-					Logger.getLogger(SHO.class.getName()).log(Level.SEVERE, null, ex);
-				}
-			} else {
-				double random = JSimSystem.negExp(mi);
-				waitTo(random);
+				} else {
+					double random = JSimSystem.negExp(mi);
+					waitTo(random);
 
-				JSimLink item = queue.first();
+					JSimLink item = queue.first();
 
-				if (item != null) //pokud item je null, je fronta prázdná
-				{
-					insertPipeline(item);
-					System.out.println("SHO " + name + " zpracovalo prvek");
+					if (item != null) //pokud item je null, je fronta prázdná
+					{
+						pipeline.insert(item);
+						counter++;
+						System.out.println("SHO " + name + " zpracovalo prvek");
+					}
 				}
 			}
-		}
-	}
-
-	/**
-	 * Vloží prvek do pipline.
-	 *
-	 * @param item Prvek, co se má vložit do pipeline.
-	 */
-	private void insertPipeline(JSimLink item) {
-		try {
-			pipeline.insert(item);
 		} catch (JSimSecurityException ex) {
 			Logger.getLogger(SHO.class.getName()).log(Level.SEVERE, null, ex);
 		}
@@ -110,4 +104,9 @@ public class SHO extends BaseProcess implements INode {
 	public void setPipeline(Pipeline p) {
 		this.pipeline = p;
 	}
+
+	public int getCounter() {
+		return counter;
+	}
+
 }

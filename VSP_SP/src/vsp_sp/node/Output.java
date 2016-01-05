@@ -6,6 +6,7 @@ package vsp_sp.node;
 import vsp_sp.node.INode;
 
 /**
+ * Sem se zaznamenávají všechny prvky co vychází ze sítě.
  *
  * @author Petr Kukrál <p.kukral@kukral.eu>
  */

@@ -27,70 +27,12 @@ public class VSP_SP {
 	 * @param args the command line arguments
 	 */
 	public static void main(String[] args) {
-		JSimSimulation sim = null;
-		Queue queue1 = null, queue2 = null, queue3 = null, queue4 = null;
-		MyProcess process = null;
-		Output output = null;
-
 		LogManager.getLogManager().getLogger("").setLevel(Level.SEVERE);
 
-		try {
-			/* vytvoření simulace */
-			sim = new JSimSimulation("First simulation");
+		Simulation sim = new Simulation();
+		sim.run();
 
-			/* vytvoření front */
-			queue1 = new Queue("Fronta 1", sim);
-			queue2 = new Queue("Fronta 2", sim);
-			queue3 = new Queue("Fronta 3", sim);
-			queue4 = new Queue("Fronta 4", sim);
-
-			output = new Output();
-
-			createSHOsAndGenerators(queue1, queue2, queue3, queue4, output, sim);
-
-			/* spuštění simulace */
-			while ((sim.step() == true))
-				;
-
-			System.out.println("Počet zpracovaných položek je " + output.counter);
-
-		} catch (JSimException e) {
-			e.printStackTrace();
-			e.printComment(System.err);
-		} finally {
-			sim.shutdown();
-		}
-	}
-
-	/**
-	 * Vytvoření a puštění SHO.
-	 */
-	private static void createSHOsAndGenerators(Queue queue1, Queue queue2, Queue queue3, Queue queue4, Output output, JSimSimulation sim) throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException, JSimSecurityException {
-		/* vytvoření SHO */
-		SHO sho1 = new SHO(2, queue1, "SHO 1", sim);
-		SHO sho2 = new SHO(5, queue2, "SHO 2", sim);
-		SHO sho3 = new SHO(5, queue3, "SHO 3", sim);
-		SHO sho4 = new SHO(5, queue4, "SHO 4", sim);
-
-		Pipeline p1 = new Pipeline(sho3);
-		Pipeline p2 = new Pipeline(sho3, sho2, 0.9);
-		Pipeline p3 = new Pipeline(sho4, sho2, 0.95);
-		Pipeline p4 = new Pipeline(output, sho1, 0.98);
-
-		sho1.setPipeline(p1);
-		sho2.setPipeline(p2);
-		sho3.setPipeline(p3);
-		sho4.setPipeline(p4);
-
-		/* vytvoření generátorů */
-		Pipeline p5 = new Pipeline(sho1);
-		Pipeline p6 = new Pipeline(sho2);
-
-		Generator gen1 = new Generator(1, 2000, p5, "Generátor s labda = 1", sim);
-		gen1.activateNow();
-
-		Generator gen2 = new Generator(3, 2000, p6, "Generátor s labda = 3", sim);
-		gen2.activateNow();
+		sim.printStatistics();
 	}
 
 	/* process */
