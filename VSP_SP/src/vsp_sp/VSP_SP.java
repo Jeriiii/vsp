@@ -38,18 +38,20 @@ public class VSP_SP {
 
 			output = new Output();
 
-			//createGenetarors(queue1, queue2, sim);
-			Generator gen1 = new Generator(1, 2000, queue1, "Generátor s labda = 1", sim);
-			gen1.activateNow();
-
-			Generator gen2 = new Generator(3, 2000, queue2, "Generátor s labda = 3", sim);
-			gen2.activateNow();
-
+//			Generator gen1 = new Generator(1, 2000, queue1, "Generátor s labda = 1", sim);
+//			gen1.activateNow();
+//
+//			Generator gen2 = new Generator(3, 2000, queue2, "Generátor s labda = 3", sim);
+//			gen2.activateNow();
 			createSHO(queue1, queue2, queue3, queue4, output, sim);
+
+			//createGenetarors(queue1, queue2, sim);
 
 			/* spuštění simulace */
 			while ((sim.step() == true))// && (!gen1.isFinished()) && (!gen2.isFinished()))
 				;
+
+			System.out.println("Počet zpracovaných položek je " + output.counter);
 
 		} catch (JSimException e) {
 			e.printStackTrace();
@@ -62,14 +64,16 @@ public class VSP_SP {
 	/**
 	 * Vytvoření a spuštění generátorů.
 	 */
-	private static void createGenetarors(Queue queue1, Queue queue2, JSimSimulation sim) throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException, JSimSecurityException {
-		Generator gen1 = new Generator(1, 2000, queue1, "Generátor s labda = 1", sim);
-		gen1.activateNow();
-
-		Generator gen2 = new Generator(3, 2000, queue2, "Generátor s labda = 3", sim);
-		gen2.activateNow();
-	}
-
+//	private static void createGenetarors(Queue queue1, Queue queue2, JSimSimulation sim) throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException, JSimSecurityException {
+//		Pipeline p1 = new Pipeline(sho3);
+//		Pipeline p2 = new Pipeline(sho3, sho2, 0.9);
+//
+//		Generator gen1 = new Generator(1, 2000, queue1, "Generátor s labda = 1", sim);
+//		gen1.activateNow();
+//
+//		Generator gen2 = new Generator(3, 2000, queue2, "Generátor s labda = 3", sim);
+//		gen2.activateNow();
+//	}
 	/**
 	 * Vytvoření a puštění SHO.
 	 */
@@ -88,6 +92,15 @@ public class VSP_SP {
 		sho2.setPipeline(p2);
 		sho3.setPipeline(p3);
 		sho4.setPipeline(p4);
+
+		Pipeline p5 = new Pipeline(sho1);
+		Pipeline p6 = new Pipeline(sho2);
+
+		Generator gen1 = new Generator(1, 2000, p5, "Generátor s labda = 1", sim);
+		gen1.activateNow();
+
+		Generator gen2 = new Generator(3, 2000, p6, "Generátor s labda = 3", sim);
+		gen2.activateNow();
 
 //		sho1.activateNow();
 //		sho2.activateNow();

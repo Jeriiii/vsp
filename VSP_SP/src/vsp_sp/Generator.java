@@ -28,9 +28,9 @@ public class Generator extends BaseProcess {
 	private int lambda;
 
 	/**
-	 * Fronta, do které bude generátor vkládat vygenerované prvky.
+	 * Pipeline, do které bude generátor vkládat vygenerované prvky.
 	 */
-	private Queue queue;
+	private Pipeline pipeline;
 
 	/**
 	 * Počet položek vygenerovaných generátorem.
@@ -42,13 +42,13 @@ public class Generator extends BaseProcess {
 	 */
 	public boolean finished = false;
 
-	public Generator(int lambda, int countGenItems, Queue queue, String name, JSimSimulation parent)
+	public Generator(int lambda, int countGenItems, Pipeline p, String name, JSimSimulation parent)
 			throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException {
 		super(name, parent);
 
 		this.lambda = lambda;
 		this.countGenItems = countGenItems;
-		this.queue = queue;
+		this.pipeline = p;
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class Generator extends BaseProcess {
 			waitTo(random);
 
 			JSimLink item = new JSimLink();
-			into(item, queue);
+			into(item);
 
 		}
 
@@ -73,11 +73,10 @@ public class Generator extends BaseProcess {
 	 * Vloží prvek do fronty.
 	 *
 	 * @param item Prvek, co se má vložit do fronty.
-	 * @param queue Fronta.
 	 */
-	private void into(JSimLink item, Queue queue) {
+	private void into(JSimLink item) {
 		try {
-			item.into(queue);
+			pipeline.insert(item);
 		} catch (JSimSecurityException ex) {
 			Logger.getLogger(Generator.class.getName()).log(Level.SEVERE, null, ex);
 		}
