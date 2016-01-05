@@ -72,7 +72,7 @@ public class SHO extends BaseProcess implements INode {
 					{
 						pipeline.insert(item);
 						counter++;
-						System.out.println("SHO " + name + " zpracovalo prvek");
+						//System.out.println("SHO " + name + " zpracovalo prvek");
 					}
 				}
 			}

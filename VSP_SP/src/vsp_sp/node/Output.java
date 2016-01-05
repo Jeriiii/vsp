@@ -3,6 +3,9 @@
  */
 package vsp_sp.node;
 
+import cz.zcu.fav.kiv.jsim.JSimLink;
+import cz.zcu.fav.kiv.jsim.JSimSimulation;
+import vsp_sp.Item;
 import vsp_sp.node.INode;
 
 /**
@@ -17,8 +20,33 @@ public class Output implements INode {
 	 */
 	public int counter = 0;
 
-	public void out(Object item) {
+	/**
+	 * Součet všech Tq
+	 */
+	public double sumTq = 0.0;
+
+	/**
+	 * Simulace.
+	 */
+	private JSimSimulation sim;
+
+	public Output(JSimSimulation sim) {
+		this.sim = sim;
+	}
+
+	public void out(JSimLink jitem) {
+		Item item = (Item) jitem.getData();
+
+		sumTq = sumTq + item.getDiff(sim.getCurrentTime());
+
 		counter++;
+	}
+
+	/**
+	 * Průměrná Tq celé fronty.
+	 */
+	public double getTq() {
+		return sumTq / ((double) counter);
 	}
 
 }

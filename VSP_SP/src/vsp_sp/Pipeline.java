@@ -79,14 +79,13 @@ public class Pipeline {
 	 */
 	private void insertToQueue(JSimLink item, INode node) throws JSimSecurityException {
 		if (node instanceof Output) { //pokud jde o výstupní kanál z celé sítě front, prvek se již nikam neukládá
-			System.out.println("out");
 			item.out();
 			((Output) node).out(item);
 			return;
 		} else {
 			SHO sho = (SHO) node;
 			sho.insert(item);
-			System.out.println("Vloženo do " + sho.name);
+			//System.out.println("Vloženo do " + sho.name);
 		}
 	}
 

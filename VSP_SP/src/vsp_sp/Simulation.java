@@ -55,7 +55,7 @@ public class Simulation {
 			queue3 = new Queue("Fronta 3", sim);
 			queue4 = new Queue("Fronta 4", sim);
 
-			output = new Output();
+			output = new Output(sim);
 
 			createSHOsAndGenerators(queue1, queue2, queue3, queue4, output, sim);
 
@@ -82,6 +82,9 @@ public class Simulation {
 		System.out.println("Počet položek zpracovaných SHO 2: " + sho2.getCounter());
 		System.out.println("Počet položek zpracovaných SHO 3: " + sho3.getCounter());
 		System.out.println("Počet položek zpracovaných SHO 4: " + sho4.getCounter());
+
+		System.out.println("-------------- Tq -------------- ");
+		System.out.println("Celkové Tq je " + output.getTq());
 	}
 
 	/**
@@ -108,10 +111,10 @@ public class Simulation {
 		Pipeline p5 = new Pipeline(sho1);
 		Pipeline p6 = new Pipeline(sho2);
 
-		Generator gen1 = new Generator(1, 1000, p5, "Generátor s labda = 1", sim);
+		Generator gen1 = new Generator(1, 50000, p5, "Generátor s labda = 1", sim);
 		gen1.activateNow();
 
-		Generator gen2 = new Generator(3, 1000, p6, "Generátor s labda = 3", sim);
+		Generator gen2 = new Generator(3, 50000, p6, "Generátor s labda = 3", sim);
 		gen2.activateNow();
 	}
 
