@@ -3,19 +3,9 @@
  */
 package vsp_sp;
 
-import vsp_sp.node.Output;
-import vsp_sp.node.Queue;
-import vsp_sp.node.SHO;
-import vsp_sp.generator.Generator;
-import cz.zcu.fav.kiv.jsim.JSimException;
-import cz.zcu.fav.kiv.jsim.JSimInvalidParametersException;
-import cz.zcu.fav.kiv.jsim.JSimLink;
-import cz.zcu.fav.kiv.jsim.JSimSecurityException;
-import cz.zcu.fav.kiv.jsim.JSimSimulation;
-import cz.zcu.fav.kiv.jsim.JSimSimulationAlreadyTerminatedException;
-import cz.zcu.fav.kiv.jsim.JSimTooManyProcessesException;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
+import vsp_sp.generator.Exp;
 
 /**
  *
@@ -30,7 +20,8 @@ public class VSP_SP {
 		LogManager.getLogManager().getLogger("").setLevel(Level.SEVERE);
 
 		Simulation sim = new Simulation();
-		sim.run();
+		String district = "EXP";
+		sim.run(district);
 
 		sim.printStatistics();
 	}

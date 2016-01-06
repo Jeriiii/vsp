@@ -26,11 +26,6 @@ import vsp_sp.Pipeline;
 public class Generator extends BaseProcess {
 
 	/**
-	 * Lambda - parametr exp. generátor náhodných čísel.
-	 */
-	private int lambda;
-
-	/**
 	 * Pipeline, do které bude generátor vkládat vygenerované prvky.
 	 */
 	private Pipeline pipeline;
@@ -45,13 +40,18 @@ public class Generator extends BaseProcess {
 	 */
 	public boolean finished = false;
 
-	public Generator(int lambda, int countGenItems, Pipeline p, String name, JSimSimulation parent)
+	/**
+	 * Generátor náhodného čísla daného rozdělení.
+	 */
+	private IDistribution distribution;
+
+	public Generator(int countGenItems, IDistribution d, Pipeline p, String name, JSimSimulation parent)
 			throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException {
 		super(name, parent);
 
-		this.lambda = lambda;
 		this.countGenItems = countGenItems;
 		this.pipeline = p;
+		this.distribution = d;
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class Generator extends BaseProcess {
 	@Override
 	protected void life() {
 		for (int i = 0; i < countGenItems; i++) {
-			double random = JSimSystem.negExp(lambda);
+			double random = distribution.generate();
 
 			waitTo(random);
 

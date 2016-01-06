@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import vsp_sp.BaseProcess;
 import vsp_sp.Pipeline;
+import vsp_sp.generator.IDistribution;
 
 /**
  * Elementární SHO.
@@ -34,9 +35,9 @@ public class SHO extends BaseProcess implements INode {
 	private Pipeline pipeline;
 
 	/**
-	 * Mí které rozhoduje, jak rychle se budou zpracovávat prvky.
+	 * Generátor náhodného čísla daného rozdělení.
 	 */
-	private int mi;
+	private IDistribution distribution;
 
 	/**
 	 * Počet položek co prošel daným SHO
@@ -48,11 +49,11 @@ public class SHO extends BaseProcess implements INode {
 	 */
 	private double sumTs = 0.0;
 
-	public SHO(int mi, Queue queue, String name, JSimSimulation parent)
+	public SHO(IDistribution d, Queue queue, String name, JSimSimulation parent)
 			throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException {
 		super(name, parent);
 
-		this.mi = mi;
+		this.distribution = d;
 		this.queue = queue;
 		this.pipeline = pipeline;
 	}
@@ -70,7 +71,7 @@ public class SHO extends BaseProcess implements INode {
 
 				} else {
 
-					double random = JSimSystem.negExp(mi);
+					double random = distribution.generate();
 					sumTs = sumTs + random;
 
 					waitTo(random);

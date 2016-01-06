@@ -9,7 +9,9 @@ import cz.zcu.fav.kiv.jsim.JSimSecurityException;
 import cz.zcu.fav.kiv.jsim.JSimSimulation;
 import cz.zcu.fav.kiv.jsim.JSimSimulationAlreadyTerminatedException;
 import cz.zcu.fav.kiv.jsim.JSimTooManyProcessesException;
+import vsp_sp.generator.Exp;
 import vsp_sp.generator.Generator;
+import vsp_sp.generator.IDistribution;
 import vsp_sp.node.Output;
 import vsp_sp.node.Queue;
 import vsp_sp.node.SHO;
@@ -20,6 +22,11 @@ import vsp_sp.node.SHO;
  * @author Petr Kukrál <p.kukral@kukral.eu>
  */
 public class Simulation {
+
+	/* jednotilvé pravděpodobnosti */
+	final double P1 = 0.1;
+	final double P2 = 0.05;
+	final double P3 = 0.02;
 
 	/**
 	 * JSim simulace
@@ -44,7 +51,7 @@ public class Simulation {
 	/**
 	 * Spustí celou simulaci
 	 */
-	public void run() {
+	public void run(String district) {
 		try {
 			/* vytvoření simulace */
 			sim = new JSimSimulation("First simulation");
@@ -57,7 +64,7 @@ public class Simulation {
 
 			output = new Output(sim);
 
-			createSHOsAndGenerators(queue1, queue2, queue3, queue4, output, sim);
+			createSHOsAndGenerators(district);
 
 			/* spuštění simulace */
 			while ((sim.step() == true))
@@ -94,17 +101,30 @@ public class Simulation {
 	/**
 	 * Vytvoření a puštění SHO.
 	 */
-	private void createSHOsAndGenerators(Queue queue1, Queue queue2, Queue queue3, Queue queue4, Output output, JSimSimulation sim) throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException, JSimSecurityException {
+	private void createSHOsAndGenerators(String district) throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException, JSimSecurityException {
+		/* vytvoření rozdělení */
+		IDistribution shoDis1 = null, shoDis2 = null, shoDis3 = null, shoDis4 = null, genDis1 = null, genDis2 = null;
+
+		if (district.equals("EXP") || district.equals("exp")) {
+			shoDis1 = new Exp(2);
+			shoDis2 = new Exp(5);
+			shoDis3 = new Exp(5);
+			shoDis4 = new Exp(6);
+
+			genDis1 = new Exp(1);
+			genDis2 = new Exp(3);
+		}
+
 		/* vytvoření SHO */
-		sho1 = new SHO(2, queue1, "SHO 1", sim);
-		sho2 = new SHO(5, queue2, "SHO 2", sim);
-		sho3 = new SHO(5, queue3, "SHO 3", sim);
-		sho4 = new SHO(5, queue4, "SHO 4", sim);
+		sho1 = new SHO(shoDis1, queue1, "SHO 1", sim);
+		sho2 = new SHO(shoDis2, queue2, "SHO 2", sim);
+		sho3 = new SHO(shoDis3, queue3, "SHO 3", sim);
+		sho4 = new SHO(shoDis4, queue4, "SHO 4", sim);
 
 		Pipeline p1 = new Pipeline(sho3);
-		Pipeline p2 = new Pipeline(sho3, sho2, 0.9);
-		Pipeline p3 = new Pipeline(sho4, sho2, 0.95);
-		Pipeline p4 = new Pipeline(output, sho1, 0.98);
+		Pipeline p2 = new Pipeline(sho3, sho2, 1.0 - P1);
+		Pipeline p3 = new Pipeline(sho4, sho2, 1.0 - P2);
+		Pipeline p4 = new Pipeline(output, sho1, 1.0 - P3);
 
 		sho1.setPipeline(p1);
 		sho2.setPipeline(p2);
@@ -115,10 +135,10 @@ public class Simulation {
 		Pipeline p5 = new Pipeline(sho1);
 		Pipeline p6 = new Pipeline(sho2);
 
-		Generator gen1 = new Generator(1, 50000, p5, "Generátor s labda = 1", sim);
+		Generator gen1 = new Generator(50000, genDis1, p5, "Generátor s labda = 1", sim);
 		gen1.activateNow();
 
-		Generator gen2 = new Generator(3, 50000, p6, "Generátor s labda = 3", sim);
+		Generator gen2 = new Generator(50000, genDis2, p6, "Generátor s labda = 3", sim);
 		gen2.activateNow();
 	}
 
