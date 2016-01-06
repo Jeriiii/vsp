@@ -10,7 +10,6 @@ import cz.zcu.fav.kiv.jsim.JSimSimulation;
 import cz.zcu.fav.kiv.jsim.JSimSimulationAlreadyTerminatedException;
 import cz.zcu.fav.kiv.jsim.JSimTooManyHeadsException;
 import cz.zcu.fav.kiv.jsim.JSimTooManyProcessesException;
-import vsp_sp.generator.Exp;
 import vsp_sp.generator.Generator;
 import vsp_sp.generator.GeneratorCreator;
 import vsp_sp.generator.IDistribution;

@@ -5,7 +5,6 @@ package vsp_sp;
 
 import java.util.logging.Level;
 import java.util.logging.LogManager;
-import vsp_sp.generator.Exp;
 import vsp_sp.generator.GeneratorCreator;
 
 /**
