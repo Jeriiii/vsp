@@ -34,6 +34,16 @@ public class Simulation {
 	final double LAMBDA_SHO_3 = 4.3;
 	final double LAMBDA_SHO_4 = 4.08;
 
+	/* mí jednotlivých SHO */
+	final double MI_1 = 2.0;
+	final double MI_2 = 5.0;
+	final double MI_3 = 5.0;
+	final double MI_4 = 6.0;
+
+	/* mí jednotlivých SHO */
+	final double LAMBDA_1 = 1.0;
+	final double LAMBDA_2 = 3.0;
+
 	/**
 	 * JSim simulace
 	 */
@@ -137,13 +147,13 @@ public class Simulation {
 		IDistribution shoDis1 = null, shoDis2 = null, shoDis3 = null, shoDis4 = null, genDis1 = null, genDis2 = null;
 
 		if (district.equals("EXP") || district.equals("exp")) {
-			shoDis1 = new Exp(2);
-			shoDis2 = new Exp(5);
-			shoDis3 = new Exp(5);
-			shoDis4 = new Exp(6);
+			shoDis1 = new Exp(MI_1);
+			shoDis2 = new Exp(MI_2);
+			shoDis3 = new Exp(MI_3);
+			shoDis4 = new Exp(MI_4);
 
-			genDis1 = new Exp(1);
-			genDis2 = new Exp(3);
+			genDis1 = new Exp(LAMBDA_1);
+			genDis2 = new Exp(LAMBDA_2);
 		}
 
 		/* vytvoření SHO */
