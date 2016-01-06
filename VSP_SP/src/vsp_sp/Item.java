@@ -17,12 +17,21 @@ public class Item {
 	 */
 	public double createSimulationTime;
 
+	/**
+	 * Čas, kdy vstoupil prvek do SHO
+	 */
+	public double inputToSHOTime;
+
 	public Item(double createSimulationTime) {
 		this.createSimulationTime = createSimulationTime;
 	}
 
-	public double getDiff(double simulationTime) {
+	public double getCreatedDiff(double simulationTime) {
 		return simulationTime - createSimulationTime;
+	}
+
+	public double getInputToSHODiff(double simulationTime) {
+		return simulationTime - inputToSHOTime;
 	}
 
 }

@@ -37,7 +37,7 @@ public class Output implements INode {
 	public void out(JSimLink jitem) {
 		Item item = (Item) jitem.getData();
 
-		sumTq = sumTq + item.getDiff(sim.getCurrentTime());
+		sumTq = sumTq + item.getCreatedDiff(sim.getCurrentTime());
 
 		counter++;
 	}

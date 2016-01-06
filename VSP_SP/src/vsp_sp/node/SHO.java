@@ -14,6 +14,7 @@ import cz.zcu.fav.kiv.jsim.JSimTooManyProcessesException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import vsp_sp.BaseProcess;
+import vsp_sp.Item;
 import vsp_sp.Pipeline;
 import vsp_sp.generator.IDistribution;
 
@@ -49,6 +50,11 @@ public class SHO extends BaseProcess implements INode {
 	 */
 	private double sumTs = 0.0;
 
+	/**
+	 * Celkový součet všech časů, které strávili položky v tomto SHO
+	 */
+	private double sumTq = 0.0;
+
 	public SHO(IDistribution d, Queue queue, String name, JSimSimulation parent)
 			throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException {
 		super(name, parent);
@@ -76,15 +82,13 @@ public class SHO extends BaseProcess implements INode {
 
 					waitTo(random);
 
-					JSimLink item = queue.first();
+					JSimLink jitem = queue.first();
 
-					if (item != null) //pokud item je null, je fronta prázdná
-					{
-						pipeline.insert(item);
-						counter++;
-						//System.out.println("SHO " + name + " zpracovalo prvek");
-					}
+					Item item = (Item) (jitem.getData());
+					sumTq = sumTq + item.getInputToSHODiff(myParent.getCurrentTime());
 
+					pipeline.insert(jitem);
+					counter++;
 				}
 			}
 		} catch (JSimSecurityException ex) {
@@ -98,14 +102,17 @@ public class SHO extends BaseProcess implements INode {
 	 * @param item Prvek co se má vložit
 	 * @throws JSimSecurityException
 	 */
-	public void insert(JSimLink item) throws JSimSecurityException {
+	public void insert(JSimLink jitem) throws JSimSecurityException {
+		Item item = (Item) (jitem.getData());
+		item.inputToSHOTime = myParent.getCurrentTime();
+
 		try {
-			item.out();
+			jitem.out();
 		} catch (JSimSecurityException e) {
 			//reakce na vyjímku, kdy prvek není v žádné frontě
 			//když není v žádné frontě, tak se prostě nic nestane -> opravdu tu nemá být žádný kód
 		}
-		item.into(queue);
+		jitem.into(queue);
 
 		if (this.isIdle() && (!this.isHold())) {
 			activateNow();
@@ -142,7 +149,7 @@ public class SHO extends BaseProcess implements INode {
 	 * Vrátí průměrnou dobu, kterou musel prvek strávit v tomto SHO
 	 */
 	public double getTq() {
-		return this.getTw() + this.getTs();
+		return sumTq / ((double) counter);
 	}
 
 	/**
