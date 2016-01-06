@@ -1,10 +1,5 @@
 package vsp_sp.generator;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
-
 /**
  * Generuje náhodná čísla náhodného rozdělení
  *
@@ -27,6 +22,11 @@ public class Gauss implements IDistribution {
 	 * vypočítá normálové.
 	 */
 	private static final int n = 12;
+
+	public Gauss(double a) {
+		this.a = a;
+		this.sigma = 0.5;
+	}
 
 	public Gauss(double a, double sigma) {
 		this.a = a;

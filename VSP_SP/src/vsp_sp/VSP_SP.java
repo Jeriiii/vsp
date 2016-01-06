@@ -6,6 +6,7 @@ package vsp_sp;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import vsp_sp.generator.Exp;
+import vsp_sp.generator.GeneratorCreator;
 
 /**
  *
@@ -21,7 +22,15 @@ public class VSP_SP {
 
 		Simulation sim = new Simulation();
 		String district = "EXP";
-		sim.run(district, 100000);
+
+		GeneratorCreator gc = new GeneratorCreator();
+		if (district.equals("EXP") || district.equals("exp")) {
+			gc.setCreateExp();
+		} else {
+			gc.setCreateGauss();
+		}
+
+		sim.run(gc, 100000);
 
 		sim.printStatistics();
 	}

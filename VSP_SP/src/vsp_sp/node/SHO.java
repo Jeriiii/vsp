@@ -61,7 +61,6 @@ public class SHO extends BaseProcess implements INode {
 
 		this.distribution = d;
 		this.queue = queue;
-		this.pipeline = pipeline;
 	}
 
 	@Override
@@ -99,7 +98,7 @@ public class SHO extends BaseProcess implements INode {
 	/**
 	 * Vloží prvek do fronty tohoto SHO.
 	 *
-	 * @param item Prvek co se má vložit
+	 * @param jitem Prvek co se má vložit
 	 * @throws JSimSecurityException
 	 */
 	public void insert(JSimLink jitem) throws JSimSecurityException {
@@ -136,6 +135,13 @@ public class SHO extends BaseProcess implements INode {
 	 */
 	public double getTw() {
 		return queue.getTw();
+	}
+
+	/**
+	 * Vrátí průměrný počet položek ve frontě.
+	 */
+	public double getLw() {
+		return queue.getLw();
 	}
 
 	/**

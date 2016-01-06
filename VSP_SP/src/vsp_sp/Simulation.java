@@ -8,9 +8,11 @@ import cz.zcu.fav.kiv.jsim.JSimInvalidParametersException;
 import cz.zcu.fav.kiv.jsim.JSimSecurityException;
 import cz.zcu.fav.kiv.jsim.JSimSimulation;
 import cz.zcu.fav.kiv.jsim.JSimSimulationAlreadyTerminatedException;
+import cz.zcu.fav.kiv.jsim.JSimTooManyHeadsException;
 import cz.zcu.fav.kiv.jsim.JSimTooManyProcessesException;
 import vsp_sp.generator.Exp;
 import vsp_sp.generator.Generator;
+import vsp_sp.generator.GeneratorCreator;
 import vsp_sp.generator.IDistribution;
 import vsp_sp.node.Output;
 import vsp_sp.node.Queue;
@@ -24,68 +26,72 @@ import vsp_sp.node.SHO;
 public class Simulation {
 
 	/* jednotilvé pravděpodobnosti */
-	final double P1 = 0.1;
-	final double P2 = 0.05;
-	final double P3 = 0.02;
+	private final double P1 = 0.1;
+	private final double P2 = 0.05;
+	private final double P3 = 0.02;
 
 	/* velká lambda jednotlivých SHO */
-	final double LAMBDA_SHO_1 = 1.08;
-	final double LAMBDA_SHO_2 = 3.57;
-	final double LAMBDA_SHO_3 = 4.3;
-	final double LAMBDA_SHO_4 = 4.08;
+	private final double LAMBDA_SHO_1 = 1.08;
+	private final double LAMBDA_SHO_2 = 3.57;
+	private final double LAMBDA_SHO_3 = 4.3;
+	private final double LAMBDA_SHO_4 = 4.08;
 
 	/* mí jednotlivých SHO */
-	final double MI_1 = 2.0;
-	final double MI_2 = 5.0;
-	final double MI_3 = 5.0;
-	final double MI_4 = 6.0;
+	private final double MI_1 = 2.0;
+	private final double MI_2 = 5.0;
+	private final double MI_3 = 5.0;
+	private final double MI_4 = 6.0;
 
 	/* mí jednotlivých SHO */
-	final double LAMBDA_1 = 1.0;
-	final double LAMBDA_2 = 3.0;
+	private final double LAMBDA_1 = 1.0;
+	private final double LAMBDA_2 = 3.0;
+
+	/**
+	 * Aktuální poček kroků simulace
+	 */
+	private int countSimSteps = 0;
 
 	/**
 	 * JSim simulace
 	 */
-	JSimSimulation sim = null;
+	private JSimSimulation sim = null;
 
 	/**
 	 * Jednotlivé fronty v síti.
 	 */
-	Queue queue1 = null, queue2 = null, queue3 = null, queue4 = null;
+	private Queue queue1 = null, queue2 = null, queue3 = null, queue4 = null;
 
 	/**
 	 * Jednotlivé SHO v síti.
 	 */
-	SHO sho1 = null, sho2 = null, sho3 = null, sho4 = null;
+	private SHO sho1 = null, sho2 = null, sho3 = null, sho4 = null;
 
 	/**
 	 * Sem se zaznamenávají všechny prvky co vychází ze sítě.
 	 */
-	Output output = null;
+	private Output output = null;
 
 	/**
 	 * Generátory vstupních proudů.
 	 */
-	Generator gen1 = null, gen2 = null;
+	private Generator gen1 = null, gen2 = null;
 
 	/**
 	 * Spustí celou simulaci
+	 *
+	 * @param gc Vytváří gaussovské nebo exponenciální generátory náhod. čísel.
+	 * @param maxItems Počet položek, které se mají vygenerovat.
 	 */
-	public void run(String district, int maxItems) {
+	public void run(GeneratorCreator gc, int maxItems) {
 		try {
 			/* vytvoření simulace */
 			sim = new JSimSimulation("First simulation");
 
-			/* vytvoření front */
-			queue1 = new Queue("Fronta 1", sim);
-			queue2 = new Queue("Fronta 2", sim);
-			queue3 = new Queue("Fronta 3", sim);
-			queue4 = new Queue("Fronta 4", sim);
-
 			output = new Output(sim);
 
-			createSHOsAndGenerators(district);
+			createQueues(sim);
+			createSHOs(gc);
+			createGenerators(gc);
 
 			/* spuštění simulace */
 			while ((sim.step() == true)) {
@@ -95,6 +101,8 @@ public class Simulation {
 					gen1.setFinished(true);
 					gen2.setFinished(true);
 				}
+
+				countSimSteps++;
 			}
 
 		} catch (JSimException e) {
@@ -109,7 +117,10 @@ public class Simulation {
 	 * Vytiskne statistiky
 	 */
 	public void printStatistics() {
+		System.out.println("-------------- Obecné -------------- ");
 		System.out.println("Počet zpracovaných položek je " + output.counter);
+		System.out.println("Doba trvání simulace je " + sim.getCurrentTime());
+		System.out.println("Počet kroků simulace je " + countSimSteps);
 
 		System.out.println("-------------- SHO -------------- ");
 		System.out.println("Počet položek zpracovaných SHO 1: " + sho1.getCounter());
@@ -137,24 +148,38 @@ public class Simulation {
 		System.out.println("SHO 3 Lqi je " + Lq3);
 		System.out.println("SHO 4 Lqi je " + Lq4);
 		System.out.println("Celkové Lq je " + Lq);
+
+		System.out.println("-------------- Fronty -------------- ");
+		System.out.println("Fronta 1 Twi je " + sho1.getTw() + " Lwi je " + sho1.getLw());
+		System.out.println("Fronta 2 Twi je " + sho2.getTw() + " Lwi je " + sho2.getLw());
+		System.out.println("Fronta 3 Twi je " + sho3.getTw() + " Lwi je " + sho3.getLw());
+		System.out.println("Fronta 4 Twi je " + sho4.getTw() + " Lwi je " + sho4.getLw());
 	}
 
 	/**
-	 * Vytvoření a puštění SHO.
+	 * Vytvoří jednotlivé fronty v síti front.
+	 *
+	 * @param sim Simulace.
+	 * @throws JSimInvalidParametersException
+	 * @throws JSimTooManyHeadsException
 	 */
-	private void createSHOsAndGenerators(String district) throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException, JSimSecurityException {
-		/* vytvoření rozdělení */
-		IDistribution shoDis1 = null, shoDis2 = null, shoDis3 = null, shoDis4 = null, genDis1 = null, genDis2 = null;
+	private void createQueues(JSimSimulation sim) throws JSimInvalidParametersException, JSimTooManyHeadsException {
+		/* vytvoření front */
+		queue1 = new Queue("Fronta 1", sim);
+		queue2 = new Queue("Fronta 2", sim);
+		queue3 = new Queue("Fronta 3", sim);
+		queue4 = new Queue("Fronta 4", sim);
+	}
 
-		if (district.equals("EXP") || district.equals("exp")) {
-			shoDis1 = new Exp(MI_1);
-			shoDis2 = new Exp(MI_2);
-			shoDis3 = new Exp(MI_3);
-			shoDis4 = new Exp(MI_4);
-
-			genDis1 = new Exp(LAMBDA_1);
-			genDis2 = new Exp(LAMBDA_2);
-		}
+	/**
+	 * Vytvoření SHO.
+	 */
+	private void createSHOs(GeneratorCreator gc) throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException {
+		/* vytvoření generátorů rozdělení */
+		IDistribution shoDis1 = gc.createGenerator(MI_1);
+		IDistribution shoDis2 = gc.createGenerator(MI_2);
+		IDistribution shoDis3 = gc.createGenerator(MI_3);
+		IDistribution shoDis4 = gc.createGenerator(MI_4);
 
 		/* vytvoření SHO */
 		sho1 = new SHO(shoDis1, queue1, "SHO 1", sim);
@@ -171,6 +196,15 @@ public class Simulation {
 		sho2.setPipeline(p2);
 		sho3.setPipeline(p3);
 		sho4.setPipeline(p4);
+	}
+
+	/**
+	 * Vytvoření a puštění generátorů vstupních toků.
+	 */
+	private void createGenerators(GeneratorCreator gc) throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException, JSimSecurityException {
+		/* vytvoření generátorů rozdělení */
+		IDistribution genDis1 = gc.createGenerator(LAMBDA_1);
+		IDistribution genDis2 = gc.createGenerator(LAMBDA_2);
 
 		/* vytvoření generátorů */
 		Pipeline p5 = new Pipeline(sho1);
