@@ -31,9 +31,9 @@ public class Generator extends BaseProcess {
 	private Pipeline pipeline;
 
 	/**
-	 * Počet položek vygenerovaných generátorem.
+	 * Aktuální počet vygenerovaných položek generátorem.
 	 */
-	private int countGenItems;
+	private int countGenItems = 0;
 
 	/**
 	 * TRUE = generátor vygeneroval všechny potřebné prvky, jinak FALSE
@@ -45,11 +45,10 @@ public class Generator extends BaseProcess {
 	 */
 	private IDistribution distribution;
 
-	public Generator(int countGenItems, IDistribution d, Pipeline p, String name, JSimSimulation parent)
+	public Generator(IDistribution d, Pipeline p, String name, JSimSimulation parent)
 			throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException {
 		super(name, parent);
 
-		this.countGenItems = countGenItems;
 		this.pipeline = p;
 		this.distribution = d;
 	}
@@ -59,7 +58,9 @@ public class Generator extends BaseProcess {
 	 */
 	@Override
 	protected void life() {
-		for (int i = 0; i < countGenItems; i++) {
+		while (!finished) {
+			countGenItems++;
+
 			double random = distribution.generate();
 
 			waitTo(random);
@@ -67,10 +68,7 @@ public class Generator extends BaseProcess {
 			Item item = new Item(myParent.getCurrentTime());
 			JSimLink litem = new JSimLink(item);
 			into(litem);
-
 		}
-
-		finished = true;
 	}
 
 	/**
@@ -87,12 +85,21 @@ public class Generator extends BaseProcess {
 	}
 
 	/**
-	 * Řekne, zda už vygeneroval všechny svoje prvky.
+	 * Nastavením finished = TRUE se zastaví generátor.
+	 *
+	 * @param finished TRUE zastaví generátor
+	 */
+	public void setFinished(boolean finished) {
+		this.finished = finished;
+	}
+
+	/**
+	 * Vrátí aktuální počet vygenerovaných položek.
 	 *
 	 * @return
 	 */
-	public boolean isFinished() {
-		return finished;
+	public int getCountGenItems() {
+		return countGenItems;
 	}
 
 }

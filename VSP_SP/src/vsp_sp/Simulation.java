@@ -28,6 +28,12 @@ public class Simulation {
 	final double P2 = 0.05;
 	final double P3 = 0.02;
 
+	/* velká lambda jednotlivých SHO */
+	final double LAMBDA_SHO_1 = 1.08;
+	final double LAMBDA_SHO_2 = 3.57;
+	final double LAMBDA_SHO_3 = 4.3;
+	final double LAMBDA_SHO_4 = 4.08;
+
 	/**
 	 * JSim simulace
 	 */
@@ -49,9 +55,14 @@ public class Simulation {
 	Output output = null;
 
 	/**
+	 * Generátory vstupních proudů.
+	 */
+	Generator gen1 = null, gen2 = null;
+
+	/**
 	 * Spustí celou simulaci
 	 */
-	public void run(String district) {
+	public void run(String district, int maxItems) {
 		try {
 			/* vytvoření simulace */
 			sim = new JSimSimulation("First simulation");
@@ -67,8 +78,14 @@ public class Simulation {
 			createSHOsAndGenerators(district);
 
 			/* spuštění simulace */
-			while ((sim.step() == true))
-				;
+			while ((sim.step() == true)) {
+				/* zjistí, jestli generátory již vygenerovali všechny položky */
+				if ((gen1.getCountGenItems() + gen2.getCountGenItems()) >= maxItems) {
+					/* zastaví oba generátory */
+					gen1.setFinished(true);
+					gen2.setFinished(true);
+				}
+			}
 
 		} catch (JSimException e) {
 			e.printStackTrace();
@@ -96,6 +113,20 @@ public class Simulation {
 		System.out.println("SHO 3 Tqi je " + sho3.getTq());
 		System.out.println("SHO 4 Tqi je " + sho4.getTq());
 		System.out.println("Celkové Tq je " + output.getTq());
+
+		System.out.println("-------------- Lq -------------- ");
+
+		double Lq1 = sho1.getLq(LAMBDA_SHO_1);
+		double Lq2 = sho2.getLq(LAMBDA_SHO_2);
+		double Lq3 = sho3.getLq(LAMBDA_SHO_3);
+		double Lq4 = sho4.getLq(LAMBDA_SHO_4);
+		double Lq = Lq1 + Lq2 + Lq3 + Lq4;
+
+		System.out.println("SHO 1 Lqi je " + Lq1);
+		System.out.println("SHO 2 Lqi je " + Lq2);
+		System.out.println("SHO 3 Lqi je " + Lq3);
+		System.out.println("SHO 4 Lqi je " + Lq4);
+		System.out.println("Celkové Lq je " + Lq);
 	}
 
 	/**
@@ -135,10 +166,10 @@ public class Simulation {
 		Pipeline p5 = new Pipeline(sho1);
 		Pipeline p6 = new Pipeline(sho2);
 
-		Generator gen1 = new Generator(50000, genDis1, p5, "Generátor s labda = 1", sim);
+		gen1 = new Generator(genDis1, p5, "Generátor s labda = 1", sim);
 		gen1.activateNow();
 
-		Generator gen2 = new Generator(50000, genDis2, p6, "Generátor s labda = 3", sim);
+		gen2 = new Generator(genDis2, p6, "Generátor s labda = 3", sim);
 		gen2.activateNow();
 	}
 

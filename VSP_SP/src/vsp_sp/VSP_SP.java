@@ -21,7 +21,7 @@ public class VSP_SP {
 
 		Simulation sim = new Simulation();
 		String district = "EXP";
-		sim.run(district);
+		sim.run(district, 100000);
 
 		sim.printStatistics();
 	}

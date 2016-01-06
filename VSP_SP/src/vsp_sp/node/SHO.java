@@ -145,4 +145,11 @@ public class SHO extends BaseProcess implements INode {
 		return this.getTw() + this.getTs();
 	}
 
+	/**
+	 * Vrátí průměrnou počet prvků které jsou v SHO
+	 */
+	public double getLq(double lambda) {
+		return lambda * getTq();
+	}
+
 }
