@@ -21,9 +21,9 @@ public class GeneratorCreator {
 	private boolean createExp = false;
 
 	/**
-	 * Sigma pro Gauss;v generátor náhodných čísel.
+	 * Sigma pro Gauss v generátor náhodných čísel.
 	 */
-	private double sigma = 0.5;
+	private double variationCoefficientGauss;
 
 	/**
 	 * Vytvoří a vrátí nový generátor náhodných čísel s daným rozdělením.
@@ -36,7 +36,7 @@ public class GeneratorCreator {
 		IDistribution generator = null;
 
 		if (createGauss) {
-			generator = new Gauss(ex);
+			generator = new Gauss(ex, variationCoefficientGauss);
 		}
 		if (createExp) {
 			generator = new Exp(ex);
@@ -47,9 +47,15 @@ public class GeneratorCreator {
 
 	/**
 	 * Vytvářejí se generátory s gaussovským rozdělením.
+	 *
+	 * @param c koeficient variace
 	 */
-	public void setCreateGauss() {
+	public void setCreateGauss(double c) {
 		this.createGauss = true;
+
+		this.createExp = false;
+
+		this.variationCoefficientGauss = c;
 	}
 
 	/**
@@ -57,15 +63,17 @@ public class GeneratorCreator {
 	 */
 	public void setCreateExp() {
 		this.createExp = true;
+
+		this.createGauss = false;
 	}
 
 	/**
-	 * Nastaví sigmu pro Gaussův generátor náhodných čísel.
+	 * Nastaví C pro Gaussův generátor náhodných čísel.
 	 *
-	 * @param sigma
+	 * @param c koeficient variace
 	 */
-	public void setSigma(double sigma) {
-		this.sigma = sigma;
+	public void setVariationCoefficientGauss(double c) {
+		this.variationCoefficientGauss = c;
 	}
 
 }

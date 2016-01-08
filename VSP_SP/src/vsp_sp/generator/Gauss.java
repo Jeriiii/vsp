@@ -18,19 +18,41 @@ public class Gauss implements IDistribution {
 	private final double sigma;
 
 	/**
+	 * Koeficient variace.
+	 */
+	private final double c;
+
+	/**
 	 * Počet hodnot která se vygenerují v rovnoměrném rozdělení, než se z toho
 	 * vypočítá normálové.
 	 */
 	private static final int n = 12;
 
-	public Gauss(double a) {
-		this.a = a;
-		this.sigma = 0.5;
+	public Gauss(double lambda, double c) {
+		this.a = 1.0 / lambda;
+		this.c = c;
+		this.sigma = c * a;
 	}
 
-	public Gauss(double a, double sigma) {
-		this.a = a;
-		this.sigma = sigma;
+	/**
+	 * Vygeneruje KLADNÉ náhodné číslo s pravděpodobnosí zadaného normálového
+	 * rozdělení.
+	 *
+	 * @return Náhodné číslo.
+	 */
+	@Override
+	public double generate() {
+		double x;
+
+		while (true) {
+			x = generateNext();
+
+			if (x >= 0.0) {
+				break;
+			}
+		}
+
+		return x;
 	}
 
 	/**
@@ -39,8 +61,7 @@ public class Gauss implements IDistribution {
 	 *
 	 * @return Náhodné číslo.
 	 */
-	@Override
-	public double generate() {
+	private double generateNext() {
 		double sumRandom = 0;
 
 		for (int i = 0; i < this.n; i++) {

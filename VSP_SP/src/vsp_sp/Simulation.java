@@ -153,6 +153,8 @@ public class Simulation {
 		System.out.println("Fronta 2 Twi je " + sho2.getTw() + " Lwi je " + sho2.getLw());
 		System.out.println("Fronta 3 Twi je " + sho3.getTw() + " Lwi je " + sho3.getLw());
 		System.out.println("Fronta 4 Twi je " + sho4.getTw() + " Lwi je " + sho4.getLw());
+
+		System.out.println("");
 	}
 
 	/**

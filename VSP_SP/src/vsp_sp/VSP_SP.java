@@ -21,64 +21,66 @@ public class VSP_SP {
 
 		Simulation sim = new Simulation();
 		String district = "EXP";
+		int maxItems = 100000;
 
 		GeneratorCreator gc = new GeneratorCreator();
-		if (district.equals("EXP") || district.equals("exp")) {
-			gc.setCreateExp();
-		} else {
-			gc.setCreateGauss();
+
+		if (args.length == 2) { //spuštění s pramaterem EXP nebo GAUSS
+
+			if (district.equals("EXP") || district.equals("exp")) {
+				runExp(gc, sim, maxItems);
+			} else {
+				runGauss(gc, sim, maxItems);
+			}
+
+		} else { //spuštění bez pramateru EXP nebo GAUSS
+
+			if (args.length == 0) { //počet prvků co se mají vygenerovat není zdán, nastaví se defaultní
+				maxItems = 100000;
+			}
+
+			runExp(gc, sim, maxItems);
+			runGauss(gc, sim, maxItems);
+
 		}
 
-		sim.run(gc, 100000);
+	}
 
+	/**
+	 * Spustí simulaci pro exponenciální rozdělení.
+	 *
+	 * @param gc Vytváří gaussovské nebo exponenciální generátory náhod. čísel.
+	 * @param sim Spouštěná simulace
+	 * @param maxItems Počet položek, které se mají vygenerovat.
+	 */
+	private static void runExp(GeneratorCreator gc, Simulation sim, int maxItems) {
+		System.out.println("Spuštění exp. rozdělení:");
+		gc.setCreateExp();
+		sim.run(gc, 100000);
 		sim.printStatistics();
 	}
 
-	/* process */
-	/*process = new MyProcess("My process No 1",
-	 /*sim /*,... other parameters  ...*//*);
-	 process.activate(1.2345);
+	/**
+	 * Spustí simulaci pro tři příklady Gaussovo rozdělení.
+	 *
+	 * @param gc Vytváří gaussovské nebo exponenciální generátory náhod. čísel.
+	 * @param sim Spouštěná simulace
+	 * @param maxItems Počet položek, které se mají vygenerovat.
+	 */
+	private static void runGauss(GeneratorCreator gc, Simulation sim, int maxItems) {
+		System.out.println("Spuštění Gaussovo rozdělení pro koef. var. = 0.05:");
+		gc.setCreateGauss(0.05);
+		sim.run(gc, 100000);
+		sim.printStatistics();
 
-	 /* vkládání prvku do fronty */
-	/*JSimLink element;
-	 int i;
-	 for (i = 0; i < 5; i++) {
-	 element = new JSimLink(new Integer(i));
-	 element.into(queue1);
-	 }
+		System.out.println("Spuštění Gaussovo rozdělení pro koef. var. = 0.2:");
+		gc.setCreateGauss(0.2);
+		sim.run(gc, 100000);
+		sim.printStatistics();
 
-	 /* vkládání před a za prvek */
-	/*JSimLink before, after;
-	 after = new JSimLink(new Float(0.5));
-	 before = new JSimLink(new Float(3.5));
-	 after.follow(queue1.first());
-	 before.precede(queue1.last());
-
-	 /* projde a vytiskne prvky ve frontě - po vytištění prvku je prvek odstraněn */
-//			String dataType;
-//			Integer intObject;
-//			Float floatObject;
-//
-//			while (!queue.empty()) {
-//				element = queue.first();
-//				dataType = element.getDataType();
-//				System.out.println("The first element is of type: "
-//						+ dataType);
-//				switch (dataType.charAt(dataType.lastIndexOf('.') + 1)) {
-//					case 'I': // Integer
-//						intObject = (Integer) element.getData();
-//						System.out.println("Data: " + intObject.toString());
-//						break;
-//					case 'F': // Float
-//						floatObject = (Float) element.getData();
-//						System.out.println("Data: " + floatObject.toString());
-//						break;
-//					default:
-//						System.out.println("There is an unknown object at"
-//								+ " the head of the queue.");
-//				} // switch
-//				element.out();
-//				System.out.println("Number of items in the queue: "
-//						+ queue.cardinal());
-//			}
+		System.out.println("Spuštění Gaussovo rozdělení pro koef. var. = 0.7:");
+		gc.setCreateGauss(0.7);
+		sim.run(gc, 100000);
+		sim.printStatistics();
+	}
 }
