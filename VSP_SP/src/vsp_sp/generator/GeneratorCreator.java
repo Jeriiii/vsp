@@ -21,6 +21,11 @@ public class GeneratorCreator {
 	private boolean createExp = false;
 
 	/**
+	 * Sigma pro Gauss;v generátor náhodných čísel.
+	 */
+	private double sigma = 0.5;
+
+	/**
 	 * Vytvoří a vrátí nový generátor náhodných čísel s daným rozdělením.
 	 *
 	 * @param ex Střední hodnota
@@ -52,6 +57,15 @@ public class GeneratorCreator {
 	 */
 	public void setCreateExp() {
 		this.createExp = true;
+	}
+
+	/**
+	 * Nastaví sigmu pro Gaussův generátor náhodných čísel.
+	 *
+	 * @param sigma
+	 */
+	public void setSigma(double sigma) {
+		this.sigma = sigma;
 	}
 
 }
