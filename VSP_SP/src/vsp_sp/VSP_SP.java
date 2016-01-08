@@ -56,7 +56,7 @@ public class VSP_SP {
 	private static void runExp(GeneratorCreator gc, Simulation sim, int maxItems) {
 		System.out.println("Spuštění exp. rozdělení:");
 		gc.setCreateExp();
-		sim.run(gc, 100000);
+		sim.run(gc, maxItems);
 		sim.printStatistics();
 	}
 
@@ -70,17 +70,22 @@ public class VSP_SP {
 	private static void runGauss(GeneratorCreator gc, Simulation sim, int maxItems) {
 		System.out.println("Spuštění Gaussovo rozdělení pro koef. var. = 0.05:");
 		gc.setCreateGauss(0.05);
-		sim.run(gc, 100000);
+		sim.run(gc, maxItems);
 		sim.printStatistics();
 
 		System.out.println("Spuštění Gaussovo rozdělení pro koef. var. = 0.2:");
 		gc.setCreateGauss(0.2);
-		sim.run(gc, 100000);
+		sim.run(gc, maxItems);
 		sim.printStatistics();
 
 		System.out.println("Spuštění Gaussovo rozdělení pro koef. var. = 0.7:");
 		gc.setCreateGauss(0.7);
-		sim.run(gc, 100000);
+		sim.run(gc, maxItems);
+		sim.printStatistics();
+
+		System.out.println("Spuštění Gaussovo rozdělení pro koef. var. = 0.95:");
+		gc.setCreateGauss(0.95);
+		sim.run(gc, maxItems);
 		sim.printStatistics();
 	}
 }

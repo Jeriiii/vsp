@@ -55,11 +55,17 @@ public class SHO extends BaseProcess implements INode {
 	 */
 	private double sumTq = 0.0;
 
-	public SHO(IDistribution d, Queue queue, String name, JSimSimulation parent)
+	/**
+	 * Intenzita obsluhy
+	 */
+	private double mi;
+
+	public SHO(IDistribution d, double mi, Queue queue, String name, JSimSimulation parent)
 			throws JSimSimulationAlreadyTerminatedException, JSimInvalidParametersException, JSimTooManyProcessesException {
 		super(name, parent);
 
 		this.distribution = d;
+		this.mi = mi;
 		this.queue = queue;
 	}
 
@@ -161,8 +167,26 @@ public class SHO extends BaseProcess implements INode {
 	/**
 	 * Vrátí průměrnou počet prvků které jsou v SHO
 	 */
-	public double getLq(double lambda) {
-		return lambda * getTq();
+	public double getLq() {
+		return getLambda() * getTq();
+	}
+
+	/**
+	 * Vrátí vypočítanou velkou lambdu.
+	 */
+	public double getLambda() {
+		double lambda = counter / myParent.getCurrentTime();
+
+		return lambda;
+	}
+
+	/**
+	 * Vrátí zatížení tohoto SHO.
+	 */
+	public double getLoad() {
+		double load = getLambda() / mi;
+
+		return load;
 	}
 
 }

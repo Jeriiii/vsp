@@ -136,10 +136,10 @@ public class Simulation {
 
 		System.out.println("-------------- Lq -------------- ");
 
-		double Lq1 = sho1.getLq(LAMBDA_SHO_1);
-		double Lq2 = sho2.getLq(LAMBDA_SHO_2);
-		double Lq3 = sho3.getLq(LAMBDA_SHO_3);
-		double Lq4 = sho4.getLq(LAMBDA_SHO_4);
+		double Lq1 = sho1.getLq();
+		double Lq2 = sho2.getLq();
+		double Lq3 = sho3.getLq();
+		double Lq4 = sho4.getLq();
 		double Lq = Lq1 + Lq2 + Lq3 + Lq4;
 
 		System.out.println("SHO 1 Lqi je " + Lq1);
@@ -147,6 +147,12 @@ public class Simulation {
 		System.out.println("SHO 3 Lqi je " + Lq3);
 		System.out.println("SHO 4 Lqi je " + Lq4);
 		System.out.println("Celkové Lq je " + Lq);
+
+		System.out.println("-------------- Zatížení -------------- ");
+		System.out.println("SHO 1 - zatížení je " + sho1.getLoad());
+		System.out.println("SHO 2 - zatížení je " + sho2.getLoad());
+		System.out.println("SHO 3 - zatížení je " + sho3.getLoad());
+		System.out.println("SHO 4 - zatížení je " + sho4.getLoad());
 
 		System.out.println("-------------- Fronty -------------- ");
 		System.out.println("Fronta 1 Twi je " + sho1.getTw() + " Lwi je " + sho1.getLw());
@@ -183,10 +189,10 @@ public class Simulation {
 		IDistribution shoDis4 = gc.createGenerator(MI_4);
 
 		/* vytvoření SHO */
-		sho1 = new SHO(shoDis1, queue1, "SHO 1", sim);
-		sho2 = new SHO(shoDis2, queue2, "SHO 2", sim);
-		sho3 = new SHO(shoDis3, queue3, "SHO 3", sim);
-		sho4 = new SHO(shoDis4, queue4, "SHO 4", sim);
+		sho1 = new SHO(shoDis1, MI_1, queue1, "SHO 1", sim);
+		sho2 = new SHO(shoDis2, MI_2, queue2, "SHO 2", sim);
+		sho3 = new SHO(shoDis3, MI_3, queue3, "SHO 3", sim);
+		sho4 = new SHO(shoDis4, MI_4, queue4, "SHO 4", sim);
 
 		Pipeline p1 = new Pipeline(sho3);
 		Pipeline p2 = new Pipeline(sho3, sho2, 1.0 - P1);
