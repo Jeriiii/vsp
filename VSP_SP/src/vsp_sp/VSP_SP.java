@@ -82,10 +82,5 @@ public class VSP_SP {
 		gc.setCreateGauss(0.7);
 		sim.run(gc, maxItems);
 		sim.printStatistics();
-
-		System.out.println("Spuštění Gaussovo rozdělení pro koef. var. = 0.95:");
-		gc.setCreateGauss(0.95);
-		sim.run(gc, maxItems);
-		sim.printStatistics();
 	}
 }

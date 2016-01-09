@@ -29,12 +29,6 @@ public class Simulation {
 	private final double P2 = 0.05;
 	private final double P3 = 0.02;
 
-	/* velká lambda jednotlivých SHO */
-	private final double LAMBDA_SHO_1 = 1.08;
-	private final double LAMBDA_SHO_2 = 3.57;
-	private final double LAMBDA_SHO_3 = 4.3;
-	private final double LAMBDA_SHO_4 = 4.08;
-
 	/* mí jednotlivých SHO */
 	private final double MI_1 = 2.0;
 	private final double MI_2 = 5.0;
@@ -127,6 +121,12 @@ public class Simulation {
 		System.out.println("Počet položek zpracovaných SHO 3: " + sho3.getCounter());
 		System.out.println("Počet položek zpracovaných SHO 4: " + sho4.getCounter());
 
+		System.out.println("-------------- střední frekvence -------------- ");
+		System.out.println("Střední frekvence SHO 1: " + sho1.getLambda());
+		System.out.println("Střední frekvence SHO 2: " + sho2.getLambda());
+		System.out.println("Střední frekvence SHO 3: " + sho3.getLambda());
+		System.out.println("Střední frekvence SHO 4: " + sho4.getLambda());
+
 		System.out.println("-------------- Tq -------------- ");
 		System.out.println("SHO 1 Tqi je " + sho1.getTq());
 		System.out.println("SHO 2 Tqi je " + sho2.getTq());
@@ -154,11 +154,17 @@ public class Simulation {
 		System.out.println("SHO 3 - zatížení je " + sho3.getLoad());
 		System.out.println("SHO 4 - zatížení je " + sho4.getLoad());
 
+		System.out.println("-------------- Obsluha -------------- ");
+		System.out.println("SHO 1 Tsi je " + sho1.getTs() + " Lsi je " + sho1.getLs());
+		System.out.println("SHO 2 Tsi je " + sho2.getTs() + " Lsi je " + sho2.getLs());
+		System.out.println("SHO 3 Tsi je " + sho3.getTs() + " Lsi je " + sho3.getLs());
+		System.out.println("SHO 4 Tsi je " + sho4.getTs() + " Lsi je " + sho4.getLs());
+
 		System.out.println("-------------- Fronty -------------- ");
-		System.out.println("Fronta 1 Twi je " + sho1.getTw() + " Lwi je " + sho1.getLw());
-		System.out.println("Fronta 2 Twi je " + sho2.getTw() + " Lwi je " + sho2.getLw());
-		System.out.println("Fronta 3 Twi je " + sho3.getTw() + " Lwi je " + sho3.getLw());
-		System.out.println("Fronta 4 Twi je " + sho4.getTw() + " Lwi je " + sho4.getLw());
+		System.out.println("SHO 1 Twi je " + sho1.getTw() + " Lwi je " + sho1.getLw());
+		System.out.println("SHO 2 Twi je " + sho2.getTw() + " Lwi je " + sho2.getLw());
+		System.out.println("SHO 3 Twi je " + sho3.getTw() + " Lwi je " + sho3.getLw());
+		System.out.println("SHO 4 Twi je " + sho4.getTw() + " Lwi je " + sho4.getLw());
 
 		System.out.println("");
 	}

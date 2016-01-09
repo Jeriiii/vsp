@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Obaluje JSimProcess a přidává další funkcionalitu.
  *
  * @author Petr Kukrál <p.kukral@kukral.eu>
  */

@@ -140,14 +140,14 @@ public class SHO extends BaseProcess implements INode {
 	 * zpracování.
 	 */
 	public double getTw() {
-		return queue.getTw();
+		return getTq() - getTs();
 	}
 
 	/**
 	 * Vrátí průměrný počet položek ve frontě.
 	 */
 	public double getLw() {
-		return queue.getLw();
+		return getTw() * getLambda();
 	}
 
 	/**
@@ -155,6 +155,13 @@ public class SHO extends BaseProcess implements INode {
 	 */
 	public double getTs() {
 		return sumTs / ((double) counter);
+	}
+
+	/**
+	 * Vrátí průměrnou dobu zpracování prvku.
+	 */
+	public double getLs() {
+		return getLq() - getLw();
 	}
 
 	/**
@@ -187,6 +194,15 @@ public class SHO extends BaseProcess implements INode {
 		double load = getLambda() / mi;
 
 		return load;
+	}
+
+	/**
+	 * Vrátí rozptyl generátoru tohoto SHO
+	 *
+	 * @return
+	 */
+	public double getD() {
+		return distribution.getD();
 	}
 
 }

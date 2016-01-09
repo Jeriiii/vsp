@@ -74,4 +74,14 @@ public class Gauss implements IDistribution {
 		return x;
 	}
 
+	/**
+	 * Vrátí rozptyl tohoto generátoru.
+	 *
+	 * @return Rozptyl.
+	 */
+	@Override
+	public double getD() {
+		return sigma * sigma;
+	}
+
 }

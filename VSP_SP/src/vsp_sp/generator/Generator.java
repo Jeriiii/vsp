@@ -102,4 +102,13 @@ public class Generator extends BaseProcess {
 		return countGenItems;
 	}
 
+	/**
+	 * Vrátí rozptyl generátoru tohoto SHO
+	 *
+	 * @return
+	 */
+	public double getD() {
+		return distribution.getD();
+	}
+
 }

@@ -17,4 +17,11 @@ public interface IDistribution {
 	 */
 	public double generate();
 
+	/**
+	 * Vrátí rozptyl daného generátoru.
+	 *
+	 * @return Rozptyl.
+	 */
+	public double getD();
+
 }

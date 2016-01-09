@@ -31,4 +31,14 @@ public class Exp implements IDistribution {
 		return JSimSystem.negExp(this.lambda);
 	}
 
+	/**
+	 * Vrátí rozptyl tohoto generátoru.
+	 *
+	 * @return Rozptyl.
+	 */
+	@Override
+	public double getD() {
+		return 1 / (lambda * lambda);
+	}
+
 }
